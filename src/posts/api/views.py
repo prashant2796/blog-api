@@ -1,11 +1,26 @@
 from rest_framework.generics import (
+	CreateAPIView,
 	DestroyAPIView,
 	ListAPIView,
 	UpdateAPIView,
-	RetrieveAPIView
+	RetrieveAPIView,
+	RetrieveUpdateAPIView
 	)
 from posts.models import Post
-from .serializers import PostDetailSerializer,PostListSerializer
+from .serializers import (
+	PostCreateUpdateAPIView,
+	PostDetailSerializer,
+	PostListSerializer
+	)
+
+class PostCreateAPIView(CreateAPIView):
+
+	queryset = Post.objects.all()
+	serializer_class = PostCreateUpdateAPIView
+
+	def perform_create(self,serializer):
+		serializer.save(user = self.request.user)
+
 
 class PostDetailAPIView(RetrieveAPIView):
 
@@ -13,11 +28,14 @@ class PostDetailAPIView(RetrieveAPIView):
 	serializer_class = PostDetailSerializer
 	lookup_field = 'slug'
 
-class PostUpdateAPIView(UpdateAPIView):
+class PostUpdateAPIView(RetrieveUpdateAPIView):
 
 	queryset = Post.objects.all()
-	serializer_class = PostDetailSerializer
+	serializer_class = PostCreateUpdateAPIView
 	lookup_field = 'slug'
+
+	def perform_update(self,serializer):
+		serializer.save(user = self.request.user)
 
 class PostDeleteAPIView(DestroyAPIView):
 
