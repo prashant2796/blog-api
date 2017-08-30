@@ -17,6 +17,7 @@ class CommentManager(models.Manager):
         obj_id = instance.id
         qs = super(CommentManager, self).filter(content_type=content_type, object_id= obj_id).filter(parent=None)
         return qs
+    def create_by_model_type(self,model_type,slug,content,user,parent_obj=None)
 
 class Comment(models.Model):
     user        = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
