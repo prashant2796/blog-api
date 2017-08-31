@@ -21,6 +21,11 @@ class PostCreateUpdateAPIView(ModelSerializer):
 
 		]
 
+post_detail_url = HyperlinkedIdentityField(
+		view_name = 'posts-api:detail',
+		lookup_field='slug'
+	)
+
 class PostDetailSerializer(ModelSerializer):
 	# url = post_detail_url
 	user = SerializerMethodField()
